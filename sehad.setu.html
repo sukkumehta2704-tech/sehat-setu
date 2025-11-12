@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital Health Record App</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background-color: #e6e6fa;
+    }
+    header {
+      background-color: #6a5acd;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      background-color: #dcdcff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    nav button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 20px;
+      margin: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      background-color: #c0c0ff;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+    }
+    nav button.active {
+      background-color: #6a5acd;
+      color: white;
+    }
+    nav button .arrow {
+      font-size: 18px;
+      margin-left: 8px;
+    }
+    section {
+      display: none;
+      padding: 20px;
+      text-align: center;
+    }
+    section.active {
+      display: block;
+    }
+    input, textarea, button {
+      display: block;
+      margin: 10px auto;
+      padding: 8px;
+      width: 300px;
+      border-radius: 5px;
+      border: 1px solid #999;
+    }
+    button {
+      background-color: #6a5acd;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .record {
+      background-color: #f8f8ff;
+      margin: 15px auto;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 700px;
+      text-align: left;
+    }
+    .record p {
+      margin: 6px 0;
+      font-size: 15px;
+    }
+    ul.medicine-list {
+      line-height: 1.8;
+      background-color: #f8f8ff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h2>Digital Health Record App</h2>
+  </header>
+
+  <nav>
+    <button onclick="showTab('home', this)" class="active">Home <span class="arrow">▼</span></button>
+    <button onclick="showTab('medicare', this)">Medi-Care <span class="arrow"></span></button>
+    <button onclick="showTab('records', this)">Records <span class="arrow"></span></button>
+    <button onclick="showTab('medicine', this)">Medicine Info <span class="arrow"></span></button>
+  </nav>
+
+  <section id="home" class="active">
+    <h1 style="font-size: 24px; font-weight: bold; color: #4b0082;">WELCOME</h1>
+    <h2 style="font-size: 36px; font-weight: bold; color: #4b0082;">"HEALTH CARE"</h2>
+    <p style="max-width: 600px; margin: 20px auto; text-align: justify; font-size: 16px; line-height: 1.6;">
+      The Digital Health Record App is designed to help rural clinics manage patient information quickly and securely. It works offline, stores records locally, and provides easy access to basic medical guidance — all in a simple, user-friendly interface.
+    </p>
+
+    <div style="margin-top: 30px;">
+      <h3 style="color: #4b0082;">Quick Search</h3>
+      <input type="text" id="quickSearch" placeholder="Search patient name, symptoms, or diagnosis..." oninput="quickSearchRecords()" />
+      <div id="quickSearchResults"></div>
+    </div>
+
+    <div style="margin-top: 40px;">
+      <h3 style="color: #4b0082;">Doctor's List</h3>
+      <ul style="list-style: none; padding: 0; max-width: 600px; margin: 0 auto; text-align: left;">
+        <li><strong>Dr. Asha Kumari</strong> – General Physician</li>
+        <li><strong>Dr. Ramesh Singh</strong> – Pediatrician</li>
+        <li><strong>Dr. Neha Verma</strong> – Gynecologist</li>
+        <li><strong>Dr. Arvind Patel</strong> – Cardiologist</li>
+        <li><strong>Dr. Sunita Das</strong> – Dermatologist</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="medicare">
+    <h3>Add New Patient Record</h3>
+    <input type="text" id="name" placeholder="Patient Name">
+    <input type="text" id="guardian" placeholder="Guardian Name">
+    <input type="text" id="address" placeholder="Address">
+    <input type="number" id="mobile" placeholder="Mobile No." min="1000000000" max="9999999999"
+           oninput="this.value = this.value.slice(0, 10)">
+    <input type="number" id="age" placeholder="Age" min="0" max="120">
+    <textarea id="symptoms" placeholder="Symptoms"></textarea>
+    <textarea id="diagnosis" placeholder="Diagnosis"></textarea>
+    <button onclick="addRecord()">Add Record</button>
+  </section>
+
+  <section id="records">
+    <h3>Stored Records</h3>
+    <input type="text" id="searchBar" placeholder="Search records..." oninput="filterRecords()" style="margin-bottom: 15px;">
+    <div id="recordList"></div>
+  </section>
+
+  <section id="medicine">
+    <h3>Basic Medicines and Their Uses</h3>
+    <ul class="medicine-list">
+  <li><strong>Paracetamol</strong> – Fever and mild pain relief</li>
+  <li><strong>Ibuprofen</strong> – Anti-inflammatory and pain reliever</li>
+  <li><strong>ORS</strong> – Treats dehydration from diarrhea</li>
+  <li><strong>Amoxicillin</strong> – Antibiotic for infections</li>
+  <li><strong>Cetirizine</strong> – Allergies and cold symptoms</li>
+  <li><strong>Ranitidine</strong> – Reduces stomach acid</li>
+  <li><strong>Betadine</strong> – Antiseptic for wounds</li>
+  <li><strong>Salbutamol Inhaler</strong> – Asthma and breathing issues</li>
+  <li><strong>Metformin</strong> – Type 2 diabetes management</li>
+  <li><strong>Iron Tablets</strong> – Treats anemia</li>
+  <li><strong>Loperamide</strong> – Controls diarrhea</li>
+  <li><strong>Hydrocortisone Cream</strong> – Skin inflammation and rashes</li>
+  <li><strong>Azithromycin</strong> – Broad-spectrum antibiotic</li>
+  <li><strong>Diclofenac</strong> – Pain and inflammation relief</li>
+  <li><strong>Antacid Tablets</strong> – Relieves heartburn and indigestion</li>
+  <li><strong>Vitamin D</strong> – Bone health and immune support</li>
+  <li><strong>Calcium Supplements</strong> – Prevents osteoporosis</li>
+  <li><strong>Chlorpheniramine</strong> – Allergy relief</li>
+  <li><strong>Albendazole</strong> – Deworming agent</li>
+  <li><strong>Electrolyte Powder</strong> – Rehydration support</li>
+</ul>
+  </section>
+
+  <script>
+    function showTab(tabId, button) {
+      document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
+      document.getElementById(tabId).classList.add("active");
+
+      document.querySelectorAll("nav button").forEach(btn => {
+        btn.classList.remove("active");
+        btn.querySelector(".arrow").textContent = "";
+      });
+
+      button.classList.add("active");
+      button.querySelector(".arrow").textContent = "▼";
+
+      if (tabId === "records") filterRecords();
+    }
+
+    function addRecord() {
+      const name = document.getElementById("name").value;
+      const guardian = document.getElementById("guardian").value;
+      const address = document.getElementById("address").value;
+      const mobile = document.getElementById("mobile").value;
+      const age = document.getElementById("age").value;
+      const symptoms = document.getElementById("symptoms").value;
+      const diagnosis = document.getElementById("diagnosis").value;
+
+      if (!name || !guardian || !address || !mobile || !age || !symptoms || !diagnosis) {
+        alert("Please fill all fields.");
+        return;
+      }
+
+      const record = { name, guardian, address, mobile, age, symptoms, diagnosis };
+      let records = JSON.parse(localStorage.getItem("healthRecords")) || [];
+      records.push(record);
+            localStorage.setItem("healthRecords", JSON.stringify(records));
+      clearFields();
+      filterRecords();
+      quickSearchRecords(); // Update quick search results too
+    }
+
+    function filterRecords() {
+      const query = document.getElementById("searchBar").value.toLowerCase();
+      const records = JSON.parse(localStorage.getItem("healthRecords")) || [];
+      const recordList = document.getElementById("recordList");
+      recordList.innerHTML = "";
+
+      records.forEach((rec) => {
+        if (
+          rec.name.toLowerCase().includes(query) ||
+          rec.symptoms.toLowerCase().includes(query) ||
+          rec.diagnosis.toLowerCase().includes(query)
+        ) {
+          recordList.innerHTML += `
+            <div class="record">
+              <p><strong>Patient Name:</strong> ${rec.name}</p>
+              <p><strong>Guardian Name:</strong> ${rec.guardian}</p>
+              <p><strong>Address:</strong> ${rec.address}</p>
+              <p><strong>Mobile No.:</strong> ${rec.mobile}</p>
+              <p><strong>Age:</strong> ${rec.age}</p>
+              <p><strong>Symptoms:</strong> ${rec.symptoms}</p>
+              <p><strong>Diagnosis:</strong> ${rec.diagnosis}</p>
+            </div>
+          `;
+        }
+      });
+    }
+
+    function quickSearchRecords() {
+      const query = document.getElementById("quickSearch").value.toLowerCase();
+      const records = JSON.parse(localStorage.getItem("healthRecords")) || [];
+      const resultBox = document.getElementById("quickSearchResults");
+      resultBox.innerHTML = "";
+
+      records.forEach((rec) => {
+        if (
+          rec.name.toLowerCase().includes(query) ||
+          rec.symptoms.toLowerCase().includes(query) ||
+          rec.diagnosis.toLowerCase().includes(query)
+        ) {
+          resultBox.innerHTML += `
+            <div class="record">
+              <p><strong>Patient Name:</strong> ${rec.name}</p>
+              <p><strong>Guardian Name:</strong> ${rec.guardian}</p>
+              <p><strong>Address:</strong> ${rec.address}</p>
+              <p><strong>Mobile No.:</strong> ${rec.mobile}</p>
+              <p><strong>Age:</strong> ${rec.age}</p>
+              <p><strong>Symptoms:</strong> ${rec.symptoms}</p>
+              <p><strong>Diagnosis:</strong> ${rec.diagnosis}</p>
+            </div>
+          `;
+        }
+      });
+    }
+
+    function clearFields() {
+      document.getElementById("name").value = "";
+      document.getElementById("guardian").value = "";
+      document.getElementById("address").value = "";
+      document.getElementById("mobile").value = "";
+      document.getElementById("age").value = "";
+      document.getElementById("symptoms").value = "";
+      document.getElementById("diagnosis").value = "";
+    }
+
+    window.onload = () => {
+      showTab("home", document.querySelector("nav button.active"));
+    };
+  </script>
+
+</body>
+</html>
